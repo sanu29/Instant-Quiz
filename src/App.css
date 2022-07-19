@@ -1,0 +1,51 @@
+:root {
+    --primary: #967aa1;
+    --secondary:#192A51;
+}
+
+.bg-primary {
+    background-color: #967aa1;
+}
+
+.primary-color-bg {
+    background-color: #967aa1;
+}
+
+.p-r{
+    padding-right:1rem;
+}
+.p-l{
+    padding-left:1rem;
+}
+
+.m-r{
+    margin-right:1rem;
+}
+.h-100{
+    height: 100%;
+}
+.m-l{
+    margin-left:1rem;
+}
+.header-simple{
+    align-items: center;
+    justify-content: start;
+    width: 100vw;
+    background-color: #967aa1;
+}
+body{
+    background-color: #f5e6e8;
+}
+.main-img{
+    max-width: 20rem;
+
+}
+.main{
+    margin-top: 5rem;
+}
+.m-t{
+    margin-top: 1rem;
+}
+.align-items-center{
+    align-items: center;
+}
