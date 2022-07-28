@@ -1,6 +1,6 @@
 :root {
     --primary: #967aa1;
-    --secondary:#192A51;
+    --secondary:#6f547a;
 }
 
 .bg-primary {
@@ -41,11 +41,32 @@ body{
 
 }
 .main{
-    margin-top: 5rem;
+    margin-top: 3rem;
 }
 .m-t{
-    margin-top: 1rem;
+    margin-top: 3rem;
 }
 .align-items-center{
     align-items: center;
+}
+.p-1{
+    padding: 9px;
+    min-width: 5rem;
+    text-align: center;
+
+}
+.card-img-main{
+    max-width: 12rem;
+    max-height: 10rem;
+}
+.cardSub{
+    word-wrap: break-word;
+}
+.card-subtitle{
+    font-weight: bold;
+    
+}
+
+.btn-primary{
+    background-color: var(--secondary);
 }

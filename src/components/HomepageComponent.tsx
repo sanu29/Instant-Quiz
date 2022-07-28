@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import heroImg from '../images/index.svg';
+import heroImg from "../images/index.svg"
 export  function HomepageComponent() {
 
     return (<>
@@ -10,7 +10,7 @@ export  function HomepageComponent() {
              <div className="d-flex-cols justify-content-center align-items-center text-align-center flex-wrap">
                  <div className="heading2 font-color-secondary ">Instant Quiz</div>
                
-                 <div className="para4 font-weight-bolder details m-t font-color-primary">
+                 <div className="para4 font-weight-bolder details font-color-primary">
                                          
                  <br/>
                     Check Your Preperation with quick Quizes!
@@ -21,13 +21,14 @@ export  function HomepageComponent() {
                  <div className="para4 font-weight-bolder details m-t font-color-secondary">
                  JavaScript || Node || React || TypeScript 
                  </div>
-                 <div  class="heading-3  margin-8 btn bg-primary font-color-white m-r w-100 m-t">
+                 <Link to={'/explore'}>
+                 <div  className="heading-3  margin-8 btn bg-primary font-color-white m-r w-100 m-t">
                             Explore
-                        </div>
+                        </div></Link>
                </div>
         
              
-                <img src={heroImg} className="image-responsive main-img" />
+                <img src={heroImg} className="image-responsive main-img" alt='mainImage' />
      
          </div>
 
