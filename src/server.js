@@ -1,85 +1,86 @@
 import { Server, Model, RestSerializer } from "miragejs";
 import {
+  deleteFromArchivesHandler,
+  getAllArchivedNotesHandler,
+  restoreFromArchivesHandler,
+} from "./backend/controllers/ArchiveController";
+import {
   loginHandler,
   signupHandler,
-  checkToken,
+  userProfilehandler,
 } from "./backend/controllers/AuthController";
 import {
-  getAllCategoriesHandler,
-  getCategoryHandler,
-} from "./backend/controllers/CategoryController";
+  archiveNoteHandler,
+  createNoteHandler,
+  deleteNoteHandler,
+  getAllNotesHandler,
+  trashNoteHandler,
+  updateNoteHandler,
+} from "./backend/controllers/NotesController";
 import {
-  addQuizHandler,
-  getAllQuizesHandler,
-  getSingleQuizHandler,
-  getSingleQuizQuestionAnswer,
-  postQuizResultHandler,
-} from "./backend/controllers/QuizesController";
-
-import { categories } from "./backend/db/categories";
-import { quizzes } from "./backend/db/quizzes";
+  deleteFromTrashHandler,
+  getAllTrashNotesHandler,
+  restoreFromTrashHandler,
+} from "./backend/controllers/TrashController";
 import { users } from "./backend/db/users";
 
 export function makeServer({ environment = "development" } = {}) {
-  return new Server({
+  const server = new Server({
     serializers: {
       application: RestSerializer,
     },
     environment,
+    // TODO: Use Relationships to have named relational Data
     models: {
-      quiz: Model,
-      category: Model,
       user: Model,
-      totalScore: Model,
-      knowledgeLevel: Model,
-      quizTaken: Model,
+      notes: Model,
     },
 
-    // Runs on the start of the server
     seeds(server) {
-      // disballing console logs from Mirage
       server.logging = false;
-      quizzes.forEach((item) => {
-        server.create("quiz", item);
-        // console.log(item);
-      });
-
       users.forEach((item) =>
         server.create("user", {
           ...item,
-          totalScore: { current: 0 },
-          knowledgeLevel: { current: "rookie" },
-          quizTaken: [],
+          notes: [],
+          archives: [],
+          trash: [],
         })
       );
-
-      categories.forEach((item) => server.create("category", { ...item }));
     },
 
     routes() {
       this.namespace = "api";
+
       // auth routes (public)
       this.post("/auth/signup", signupHandler.bind(this));
       this.post("/auth/login", loginHandler.bind(this));
 
-      //check token (private)
-      this.post("/auth/checktoken", checkToken.bind(this));
+      // user route (private)
+      this.get("/user", userProfilehandler.bind(this));
 
-      // quizes routes (public)
-      this.get("/quizzes", getAllQuizesHandler.bind(this));
-      this.get("/quizzes/:quizId", getSingleQuizHandler.bind(this));
-      this.get(
-        "/quizzes/:quizId/:questionId",
-        getSingleQuizQuestionAnswer.bind(this)
+      // notes routes (private)
+      this.get("/notes", getAllNotesHandler.bind(this));
+      this.post("/notes", createNoteHandler.bind(this));
+      this.post("/notes/:noteId", updateNoteHandler.bind(this));
+      this.delete("/notes/:noteId", deleteNoteHandler.bind(this));
+      this.post("/notes/archives/:noteId", archiveNoteHandler.bind(this));
+      this.post("/notes/trash/:noteId", trashNoteHandler.bind(this));
+
+      // archive routes (private)
+      this.get("/archives", getAllArchivedNotesHandler.bind(this));
+      this.post(
+        "/archives/restore/:noteId",
+        restoreFromArchivesHandler.bind(this)
       );
-
-      // categories routes (public)
-      this.get("/categories", getAllCategoriesHandler.bind(this));
-      this.get("/categories/:categoryId", getCategoryHandler.bind(this));
-
-      // quizes routes (private)
-      this.post("/quizzes", addQuizHandler.bind(this));
-      this.post("/quizzes/result", postQuizResultHandler.bind(this));
+      this.delete(
+        "/archives/delete/:noteId",
+        deleteFromArchivesHandler.bind(this)
+      );
+      // trash routes (private)
+      this.get("/trash", getAllTrashNotesHandler.bind(this));
+      this.post("/trash/restore/:noteId", restoreFromTrashHandler.bind(this));
+      this.delete("/trash/delete/:noteId", deleteFromTrashHandler.bind(this));
     },
   });
+  return server;
 }
