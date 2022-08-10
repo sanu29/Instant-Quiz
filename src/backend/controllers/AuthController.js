@@ -1,7 +1,8 @@
 import { v4 as uuid } from "uuid";
 import { Response } from "miragejs";
-import { formatDate, requiresAuth } from "../utils/authUtils";
+import { formatDate } from "../utils/authUtils";
 const sign = require("jwt-encode");
+
 /**
  * All the routes related to Auth are present here.
  * These are Publicly accessible routes.
@@ -35,9 +36,9 @@ export const signupHandler = function (schema, request) {
       createdAt: formatDate(),
       updatedAt: formatDate(),
       ...rest,
-      totalScore: { current: 0 },
-      knowledgeLevel: { current: "rookie" },
-      quizTaken: [],
+      notes: [],
+      archives: [],
+      trash: [],
     };
     const createdUser = schema.users.create(newUser);
     const encodedToken = sign({ _id, email }, process.env.REACT_APP_JWT_SECRET);
@@ -98,19 +99,16 @@ export const loginHandler = function (schema, request) {
   }
 };
 
-export const checkToken = function (schema, request) {
-  const userId = requiresAuth.call(this, request);
-  try {
-    if (!userId) {
-      new Response(404, {}, { result: "User Not available / Token not valid" });
-    }
-  } catch (error) {
+export const userProfilehandler = function (schema, request) {
+  const user = requiresAuth.call(this, request);
+  if (!user) {
     return new Response(
-      500,
+      404,
       {},
       {
-        error,
+        errors: ["The email you entered is not Registered. Not Found error"],
       }
     );
   }
+  return new Response(200, {}, { user });
 };
